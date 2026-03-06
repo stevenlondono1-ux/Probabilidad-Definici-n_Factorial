@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Módulo Para Orientar Probabilidad - Factorial</title>
+
+<!-- Favicon de la UdeA -->
+<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Escudo-UdeA.svg/500px-Escudo-UdeA.svg.png" type="image/png">
+<link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Escudo-UdeA.svg/500px-Escudo-UdeA.svg.png">
+
+<!-- Librería jsPDF para PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- Font Awesome para iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', 'Times New Roman', serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6b8cff 100%);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  min-height: 100vh;
+  position: relative;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Escudo de la UdeA - VERSIÓN MEJORADA */
+.escudo-udea {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 110px;
+  height: 110px;
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Escudo-UdeA.svg/500px-Escudo-UdeA.svg.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 9999;
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.7));
+  animation: escudoBrillo 3s ease-in-out infinite;
+  background-color: white;
+  border-radius: 50%;
+  padding: 12px;
+  box-shadow: 
+    0 0 0 3px rgba(255, 215, 0, 0.5),
+    0 0 0 6px rgba(255, 255, 255, 0.3),
+    0 10px 25px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.escudo-udea:hover {
+  transform: scale(1.1) rotate(5deg);
+  filter: drop-shadow(0 0 25px gold);
+  box-shadow: 
+    0 0 0 4px gold,
+    0 0 0 8px rgba(255, 255, 255, 0.5),
+    0 15px 35px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes escudoBrillo {
+  0%, 100% { 
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.7));
+    transform: scale(1);
+  }
+  50% { 
+    filter: drop-shadow(0 0 30px gold);
+    transform: scale(1.05);
+  }
+}
+
+/* Efecto de partículas flotantes */
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  animation: particleFloat 8s infinite;
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(100px) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.95);
+  color: #2c3e50;
+  max-width: 1000px;
+  margin: auto;
+  padding: 30px;
+  border-radius: 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  position: relative;
+  z-index: 100;
+  animation: slideUp 1s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Títulos con animación */
+h1 {
+  font-size: 2.8em;
+  background: linear-gradient(135deg, #667eea, #764ba2, #ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+  animation: titlePulse 2s infinite;
+  position: relative;
+  display: inline-block;
+}
+
+h1::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #ff9800, transparent);
+  animation: lineGrow 3s infinite;
+}
+
+@keyframes titlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes lineGrow {
+  0%, 100% { width: 0; opacity: 0; }
+  50% { width: 100%; opacity: 1; }
+}
+
+h2 {
+  font-size: 2em;
+  color: #667eea;
+  margin: 15px 0;
+  animation: slideIn 0.8s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Botones con animaciones */
+button {
+  padding: 12px 30px;
+  margin: 8px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+button:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
+  background: linear-gradient(135deg, #764ba2, #667eea);
+}
+
+button:hover::before {
+  left: 100%;
+}
+
+button:active {
+  transform: translateY(0) scale(0.95);
+}
+
+/* Inputs con animación */
+input {
+  padding: 12px 20px;
+  width: 180px;
+  text-align: center;
+  border: 2px solid #e0e0e0;
+  border-radius: 50px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  margin: 5px;
+  outline: none;
+}
+
+input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+  transform: scale(1.02);
+  width: 200px;
+}
+
+/* Barra de progreso animada */
+.progress-container {
+  width: 100%;
+  background: #f0f0f0;
+  border-radius: 50px;
+  margin: 20px 0;
+  height: 30px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  border-radius: 50px;
+  transition: width 0.5s ease;
+  position: relative;
+  animation: progressPulse 2s infinite;
+}
+
+@keyframes progressPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.9; }
+}
+
+/* Avatar con animación mejorada */
+#avatar {
+  width: 150px;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+  transition: all 0.3s ease;
+  border-radius: 50%;
+}
+
+.hablando {
+  animation: speak 0.8s infinite;
+  filter: drop-shadow(0 0 20px #ff9800);
+}
+
+@keyframes speak {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.1) rotate(-2deg); }
+  75% { transform: scale(1.1) rotate(2deg); }
+}
+
+/* Tarjetas animadas */
+#final {
+  background: linear-gradient(135deg, #fff3cd, #ffe69c);
+  padding: 25px;
+  border-radius: 20px;
+  margin: 20px 0;
+  animation: cardFloat 3s infinite;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+/* Ranking reposicionado - AHORA DEBAJO Y CENTRADO */
+#ranking {
+  background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+  padding: 25px;
+  border-radius: 20px;
+  margin: 20px auto;
+  animation: cardFloat 3s infinite;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+#ranking h3 {
+  font-size: 1.8em;
+  color: #006064;
+  margin-bottom: 15px;
+}
+
+#listaRanking {
+  list-style: none;
+  padding: 0;
+}
+
+#listaRanking li {
+  padding: 10px;
+  margin: 5px 0;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  color: #00796b;
+  animation: rankingItem 0.5s ease;
+  animation-fill-mode: both;
+}
+
+#listaRanking li:nth-child(1) { animation-delay: 0.1s; background: linear-gradient(135deg, #ffd700, #ffb300); color: #fff; }
+#listaRanking li:nth-child(2) { animation-delay: 0.2s; background: linear-gradient(135deg, #c0c0c0, #a0a0a0); color: #fff; }
+#listaRanking li:nth-child(3) { animation-delay: 0.3s; background: linear-gradient(135deg, #cd7f32, #b06d1f); color: #fff; }
+
+@keyframes rankingItem {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Ejercicios con animación */
+#ejercicios {
+  display: grid;
+  gap: 15px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  margin: 20px 0;
+}
+
+#ejercicios > * {
+  animation: fadeIn 0.5s ease;
+  animation-fill-mode: both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Audio player con estilo */
+audio {
+  border-radius: 50px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  margin: 15px 0;
+  width: 100%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* Select con animación */
+select {
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 2px solid #667eea;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  margin: 10px;
+  transition: all 0.3s ease;
+}
+
+select:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Texto de respuestas */
+.correcto {
+  color: #00b09b;
+  font-weight: bold;
+  animation: correctPulse 1s infinite;
+}
+
+.incorrecto {
+  color: #ff6b6b;
+  font-weight: bold;
+  animation: shake 0.5s;
+}
+
+@keyframes correctPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Botón para nuevos ejercicios */
+#nuevosEjercicios {
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+#nuevosEjercicios i {
+  margin-right: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+  
+  h1 {
+    font-size: 2em;
+  }
+  
+  .escudo-udea {
+    width: 70px;
+    height: 70px;
+    padding: 8px;
+  }
+  
+  button {
+    padding: 10px 20px;
+  }
+  
+  #ranking {
+    max-width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Partículas flotantes -->
+<div class="particles" id="particles"></div>
+
+<!-- Escudo mejorado con nuevo estilo -->
+<div class="escudo-udea"></div>
+
+<div class="container">
+
+<!-- SESION 1 -->
+<div id="sesion1">
+<h1><i class="fas fa-calculator"></i> Módulo Para Orientar Probabilidad <i class="fas fa-dice"></i></h1>
+<h2>Factorial de un número</h2>
+
+<div style="text-align:center; margin-bottom:30px;">
+  <img src="https://raw.githubusercontent.com/stevenlondono1-ux/Imagenes/refs/heads/main/0158b827-5974-419b-8ccc-5722135b2f44.png"
+       style="width:100%; max-width:1000px; border-radius:30px; box-shadow:0 15px 30px rgba(0,0,0,0.3); animation: pulse 3s infinite;">
+</div>
+
+<button onclick="cambiarSesion(2)"><i class="fas fa-play"></i> Comenzar ➡</button>
+</div>
+
+
+<!-- SESION 2 -->
+<div id="sesion2" style="display:none;">
+<h2><i class="fas fa-book-open"></i> Definiciones</h2>
+
+<h3>Definición de Factorial</h3>
+<p>
+Esta operación matemática tiene un amplio uso en diferentes áreas, especialmente en probabilidad. 
+Se define la factorial de un número, denotado como n!, como el producto de todos los enteros positivos menores o iguales a n. 
+El factorial de un número es la multiplicación de todos los enteros positivos desde uno hasta el propio número. 
+Así, para obtener 4!, se multiplica el número por sus predecesores hasta llegar a uno: 
+<b>4! = 4 ⋅ 3 ⋅ 2 ⋅ 1 = 24.</b>
+</p>
+
+<audio controls id="audio1" onplay="hablar()" onpause="callar()" onended="callar()">
+  <source src="https://cdn.jsdelivr.net/gh/stevenlondono1-ux/factorial-game-audios/definicion.mp3" type="audio/mpeg">
+</audio>
+
+<h3>❗ Representación del Factorial</h3>
+<p>
+El factorial se representa con un signo de exclamación: !  
+Se escribe inmediatamente después del número.  
+Por ejemplo: 5!
+</p>
+
+<audio controls id="audio2" onplay="hablar()" onpause="callar()" onended="callar()">
+  <source src="https://cdn.jsdelivr.net/gh/stevenlondono1-ux/Representaci-n-F/Representaci%C3%B3n%20(mp3cut.net).mp3" type="audio/mpeg">
+</audio>
+
+<h3> 0 Factorial</h3>
+<p>
+0! es igual a 1 por definición matemática, porque existe solamente una forma de no ordenar nada.
+</p>
+
+<audio controls id="audio3" onplay="hablar()" onpause="callar()" onended="callar()">
+  <source src="https://cdn.jsdelivr.net/gh/stevenlondono1-ux/Cero-Factorial/Cero%20Factorial%20(mp3cut.net).mp3" type="audio/mpeg">
+</audio>
+
+<label><i class="fas fa-tachometer-alt"></i> Velocidad:</label>
+<select onchange="cambiarVelocidad(this.value)">
+<option value="1">1x</option>
+<option value="1.25">1.25x</option>
+<option value="1.5">1.5x</option>
+<option value="0.75">0.75x</option>
+</select>
+
+<br><br>
+<button onclick="cambiarSesion(1)"><i class="fas fa-arrow-left"></i> Volver</button>
+<button onclick="cambiarSesion(3)">Siguiente <i class="fas fa-arrow-right"></i></button>
+<button onclick="cambiarSesion(1)"><i class="fas fa-home"></i> Ir al Inicio</button>
+</div>
+
+
+<!-- SESION 3 -->
+<div id="sesion3" style="display:none;">
+<h2><i class="fas fa-calculator"></i> Calculadora</h2>
+<input type="number" id="numero" placeholder="Ingresa un número">
+<button onclick="calcular()"><i class="fas fa-equals"></i> Calcular</button>
+<p id="resultado" style="font-size: 1.2em; margin-top: 15px;"></p>
+
+<button onclick="cambiarSesion(2)"><i class="fas fa-arrow-left"></i> Anterior</button>
+<button onclick="cambiarSesion(4)">Siguiente <i class="fas fa-arrow-right"></i></button>
+<button onclick="cambiarSesion(1)"><i class="fas fa-home"></i> Ir al Inicio</button>
+</div>
+
+
+<!-- SESION 4 -->
+<div id="sesion4" style="display:none;">
+<h2><i class="fas fa-trophy"></i> Nivel: <span id="nivel">Básico</span></h2>
+
+<!-- Botón para generar nuevos ejercicios aleatorios -->
+<button id="nuevosEjercicios" onclick="generarEjerciciosAleatorios()">
+  <i class="fas fa-random"></i> Generar Nuevos Ejercicios
+</button>
+
+<div id="ejercicios"></div>
+
+<div class="progress-container">
+<div class="progress-bar" id="barra"></div>
+</div>
+
+<p><i class="fas fa-star"></i> Puntos: <span id="puntos">0</span>/<span id="totalPreguntas">12</span></p>
+
+<div id="final" style="margin-top:20px;">
+<h2><i class="fas fa-certificate"></i> Certificado</h2>
+<button onclick="descargarCertificadoPDF()"><i class="fas fa-download"></i> Descargar Certificado</button>
+</div>
+
+<!-- Ranking reposicionado debajo y centrado -->
+<div id="ranking">
+<h3><i class="fas fa-medal"></i> Ranking</h3>
+<ul id="listaRanking"></ul>
+</div>
+
+<button onclick="reiniciarJuego()"><i class="fas fa-redo-alt"></i> Reiniciar Juego</button>
+<button onclick="cambiarSesion(3)"><i class="fas fa-arrow-left"></i> Anterior</button>
+<button onclick="cambiarSesion(1)"><i class="fas fa-home"></i> Ir al Inicio</button>
+</div>
+
+</div>
+
+<audio id="sonidoCorrecto">
+<source src="https://www.soundjay.com/buttons/sounds/button-3.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// Crear partículas flotantes
+function createParticles() {
+  const particlesContainer = document.getElementById('particles');
+  for (let i = 0; i < 20; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    const size = Math.random() * 20 + 5;
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 5 + 's';
+    particle.style.animationDuration = Math.random() * 5 + 8 + 's';
+    particle.style.background = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.3)`;
+    particlesContainer.appendChild(particle);
+  }
+}
+
+let puntos = 0;
+let total = 12;
+let preguntas = [];
+
+// Banco ampliado de preguntas para ejercicios aleatorios
+const bancoPreguntas = [
+  // Preguntas básicas de factorial
+  {texto: "¿Cuánto es 3! ?", respuesta: 6},
+  {texto: "¿Cuánto es 4! ?", respuesta: 24},
+  {texto: "¿Cuánto es 5! ?", respuesta: 120},
+  {texto: "¿Cuánto es 6! ?", respuesta: 720},
+  {texto: "¿Cuánto es 7! ?", respuesta: 5040},
+  {texto: "¿Cuánto es 8! ?", respuesta: 40320},
+  {texto: "¿Cuánto es 9! ?", respuesta: 362880},
+  {texto: "¿Cuánto es 10! ?", respuesta: 3628800},
+  {texto: "¿Cuánto es 1! ?", respuesta: 1},
+  {texto: "¿Cuánto es 2! ?", respuesta: 2},
+  {texto: "¿Cuánto es 0! ?", respuesta: 1},
+  
+  // Problemas de permutaciones
+  {texto: "¿De cuántas formas se pueden ordenar 3 personas en una fila?", respuesta: 6},
+  {texto: "¿Cuántas permutaciones tienen 4 letras diferentes?", respuesta: 24},
+  {texto: "¿De cuántas formas se pueden sentar 5 amigos en 5 sillas?", respuesta: 120},
+  {texto: "¿Cuántos números de 3 dígitos diferentes se pueden formar con los dígitos 1,2,3?", respuesta: 6},
+  {texto: "Si tienes 6 libros diferentes, ¿de cuántas formas puedes ordenarlos?", respuesta: 720},
+  {texto: "¿Cuántas palabras de 4 letras diferentes puedes formar (sin importar significado)?", respuesta: 24},
+  {texto: "En una carrera con 4 corredores, ¿cuántos posibles órdenes de llegada existen?", respuesta: 24},
+  {texto: "¿De cuántas formas puedes organizar 7 colores diferentes en una fila?", respuesta: 5040},
+  {texto: "¿Cuántos códigos de 3 dígitos diferentes puedes hacer con los números del 1 al 3?", respuesta: 6},
+  {texto: "Si tienes 8 jugadores, ¿de cuántas formas puedes ordenarlos en una fila?", respuesta: 40320},
+  
+  // Ejercicios de completar
+  {texto: "Completa: 4! = 4 × 3 × 2 × __", respuesta: 1},
+  {texto: "Completa: 5! = 5 × 4 × 3 × 2 × __", respuesta: 1},
+  {texto: "Completa: 3! = 3 × 2 × __", respuesta: 1},
+  {texto: "¿Qué número falta? 6! = 6 × 5 × 4 × 3 × 2 × __", respuesta: 1},
+  {texto: "Si 4! = 24, entonces 5! = 5 × 24 = __", respuesta: 120},
+  {texto: "Si 3! = 6, entonces 4! = 4 × 6 = __", respuesta: 24},
+  {texto: "Si 5! = 120, entonces 6! = 6 × 120 = __", respuesta: 720},
+  {texto: "Si 6! = 720, entonces 7! = 7 × 720 = __", respuesta: 5040},
+  
+  // Preguntas de verdadero/falso (numéricas)
+  {texto: "¿5! es igual a 120? (Responde 1 para Sí, 0 para No)", respuesta: 1},
+  {texto: "¿4! es igual a 16? (Responde 1 para Sí, 0 para No)", respuesta: 0},
+  {texto: "¿3! es igual a 6? (Responde 1 para Sí, 0 para No)", respuesta: 1},
+  {texto: "¿0! es igual a 0? (Responde 1 para Sí, 0 para No)", respuesta: 0},
+  {texto: "¿1! es igual a 1? (Responde 1 para Sí, 0 para No)", respuesta: 1},
+  
+  // Problemas más avanzados
+  {texto: "Calcula: 5! ÷ 3!", respuesta: 20},
+  {texto: "Calcula: 6! ÷ 4!", respuesta: 30},
+  {texto: "Calcula: 7! ÷ 5!", respuesta: 42},
+  {texto: "Simplifica: 8! / 6! = ?", respuesta: 56},
+  {texto: "¿Cuánto es (3!) × (2!)?", respuesta: 12},
+  {texto: "¿Cuánto es (4!) × (1!)?", respuesta: 24},
+  {texto: "¿Cuánto es (5!) / (3!)?", respuesta: 20}
+];
+
+// Función para generar ejercicios aleatorios
+function generarEjerciciosAleatorios() {
+  // Reiniciar puntos
+  puntos = 0;
+  document.getElementById("puntos").innerText = puntos;
+  document.getElementById("nivel").innerText = "Básico";
+  document.getElementById("barra").style.width = "0%";
+  document.getElementById("final").style.display = "none";
+  
+  // Mezclar el banco de preguntas y seleccionar 12 aleatorias
+  const preguntasMezcladas = [...bancoPreguntas].sort(() => Math.random() - 0.5);
+  preguntas = preguntasMezcladas.slice(0, 12);
+  total = preguntas.length;
+  
+  // Actualizar el total mostrado
+  document.getElementById("totalPreguntas").innerText = total;
+  
+  // Limpiar y volver a cargar los ejercicios
+  const contenedor = document.getElementById("ejercicios");
+  contenedor.innerHTML = "";
+  
+  preguntas.forEach((p, i) => {
+    contenedor.innerHTML += `
+      <p>${p.texto}</p>
+      <input type="number" id="r${i}" 
+        onkeypress="if(event.key==='Enter'){verificar(${p.respuesta},'r${i}','m${i}')}">
+      <button onclick="verificar(${p.respuesta},'r${i}','m${i}')">Responder</button>
+      <p id="m${i}"></p>
+    `;
+  });
+}
+
+// Función para cargar ejercicios iniciales
+function cargarEjercicios() {
+  generarEjerciciosAleatorios();
+}
+
+function verificar(correcta, idInput, idMensaje){
+    let valor = parseInt(document.getElementById(idInput).value);
+    let mensaje = document.getElementById(idMensaje);
+    
+    if(valor === correcta){
+        if(!mensaje.classList.contains("correcto")){
+            puntos++;
+            actualizarBarra();
+            document.getElementById("sonidoCorrecto").play();
+        }
+        mensaje.innerHTML = "🎉 Correcto";
+        mensaje.className = "correcto";
+    } else {
+        mensaje.innerHTML = "❌ Incorrecto";
+        mensaje.className = "incorrecto";
+    }
+
+    // Revisar si todas las preguntas están respondidas
+    let todasRespondidas = true;
+    for(let i = 0; i < preguntas.length; i++) {
+        let input = document.getElementById("r"+i);
+        if(input && input.value === ""){
+            todasRespondidas = false;
+            break;
+        }
+    }
+
+    if(todasRespondidas){
+        document.getElementById("final").style.display = "block";
+        // Preguntar si quiere guardar en el ranking
+        setTimeout(() => {
+            if(confirm("¡Felicidades! Has completado todos los ejercicios. ¿Quieres guardar tu puntuación en el ranking?")) {
+                guardarRanking();
+            }
+        }, 500);
+    }
+}
+
+function actualizarBarra(){
+document.getElementById("puntos").innerText=puntos;
+let progreso=(puntos/total)*100;
+document.getElementById("barra").style.width=progreso+"%";
+
+if(puntos>=4) document.getElementById("nivel").innerText="Básico";
+if(puntos>=8) document.getElementById("nivel").innerText="Sobresaliente";
+}
+
+function calcular(){
+let n=parseInt(document.getElementById("numero").value);
+let res=document.getElementById("resultado");
+
+if(isNaN(n)||n<0){res.innerHTML="Número inválido";return;}
+if(n===0){res.innerHTML="0! = 1";return;}
+
+let resultado=1;
+let proceso="";
+for(let i=n;i>=1;i--){
+resultado*=i;
+proceso+=i+(i>1?" × ":"");
+}
+res.innerHTML=n+"! = "+proceso+" = "+resultado;
+}
+
+function cambiarVelocidad(v){
+document.getElementById("audio1").playbackRate=v;
+document.getElementById("audio2").playbackRate=v;
+document.getElementById("audio3").playbackRate=v;
+}
+
+function guardarRanking(){
+let nombre=prompt("Ingresa tu nombre para el ranking:");
+if(!nombre) return;
+let ranking=JSON.parse(localStorage.getItem("ranking"))||[];
+ranking.push({nombre:nombre,puntos:puntos});
+ranking.sort((a,b)=>b.puntos-a.puntos);
+// Mantener solo los mejores 10
+ranking = ranking.slice(0, 10);
+localStorage.setItem("ranking",JSON.stringify(ranking));
+mostrarRanking();
+}
+
+function mostrarRanking(){
+let lista=document.getElementById("listaRanking");
+lista.innerHTML="";
+let ranking=JSON.parse(localStorage.getItem("ranking"))||[];
+ranking.slice(0,5).forEach((r, index)=>{
+lista.innerHTML+=`<li style="animation-delay: ${index * 0.1}s">${index + 1}. ${r.nombre} - ${r.puntos} puntos</li>`;
+});
+}
+
+function reiniciarJuego(){
+puntos = 0;
+document.getElementById("puntos").innerText = 0;
+document.getElementById("nivel").innerText = "Básico";
+document.getElementById("barra").style.width = "0%";
+document.getElementById("final").style.display = "none";
+
+// Limpiar todas las respuestas
+for(let i = 0; i < preguntas.length; i++) {
+    let input = document.getElementById("r"+i);
+    let mensaje = document.getElementById("m"+i);
+    if(input) input.value = "";
+    if(mensaje) mensaje.innerHTML = "";
+}
+}
+
+function cambiarSesion(numero){
+document.getElementById("sesion1").style.display="none";
+document.getElementById("sesion2").style.display="none";
+document.getElementById("sesion3").style.display="none";
+document.getElementById("sesion4").style.display="none";
+document.getElementById("sesion"+numero).style.display="block";
+
+// Si vamos a la sesión 4, generar nuevos ejercicios automáticamente
+if(numero === 4) {
+    generarEjerciciosAleatorios();
+}
+}
+
+function hablar(){document.getElementById("avatar").classList.add("hablando");}
+function callar(){document.getElementById("avatar").classList.remove("hablando");}
+
+// Función PDF con escudo de la UdeA
+function descargarCertificadoPDF(){
+    const { jsPDF } = window.jspdf;
+
+    let nombre = prompt("¡Felicidades! Ingresa tu nombre para generar el certificado:");
+    if(!nombre) return;
+
+    let fecha = new Date().toLocaleDateString();
+    let nivel = document.getElementById("nivel").innerText;
+    let puntaje = puntos;
+    let totalPreguntas = total;
+
+    let doc = new jsPDF({
+        orientation: "landscape",
+        unit: "px",
+        format: [800, 600]
+    });
+
+    // Fondo color
+    doc.setFillColor(255, 250, 240); // color crema
+    doc.rect(0, 0, 800, 600, 'F');
+
+    // Borde decorativo
+    doc.setDrawColor(255, 153, 0);
+    doc.setLineWidth(4);
+    doc.rect(20, 20, 760, 560);
+
+    // Agregar escudo de la UdeA al certificado
+    doc.addImage('https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Escudo-UdeA.svg/500px-Escudo-UdeA.svg.png', 'PNG', 350, 30, 100, 100);
+
+    // Título
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(36);
+    doc.setTextColor(60, 60, 60);
+    doc.text("CERTIFICADO DE LOGRO", 400, 150, {align: "center"});
+
+    // Nombre
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(28);
+    doc.text(`Nombre: ${nombre}`, 400, 230, {align: "center"});
+
+    // Puntaje y nivel
+    doc.text(`Puntaje: ${puntaje} de ${totalPreguntas}`, 400, 280, {align: "center"});
+    doc.text(`Nivel alcanzado: ${nivel}`, 400, 330, {align: "center"});
+    doc.text(`Fecha: ${fecha}`, 400, 380, {align: "center"});
+
+    // Mensaje final
+    doc.setFontSize(22);
+    doc.setTextColor(80, 80, 80);
+    doc.text("¡Felicitaciones por completar el juego del Factorial!", 400, 450, {align: "center"});
+
+    // Guardar PDF
+    doc.save("Certificado_Factorial_UdeA.pdf");
+}
+
+// Inicializar
+cargarEjercicios();
+mostrarRanking();
+createParticles();
+
+</script>
+
+</body>
+
+</html>
